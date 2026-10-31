@@ -3,6 +3,11 @@
 .env.*
 !.env.example
 
+cookies.txt
+audio.m4a
+memo.wav
+
+
 __pycache__/
 *.py[cod]
 venv/

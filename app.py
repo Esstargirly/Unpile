@@ -22,7 +22,19 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    # blueprints (auth, dump, focus, park) get registered here as we build them
+    from routes.auth import auth_bp
+    from routes.dump import dump_bp
+    from routes.focus import focus_bp
+    from routes.park import park_bp
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(dump_bp)
+    app.register_blueprint(focus_bp)
+    app.register_blueprint(park_bp)
+
+    @app.errorhandler(413)
+    def too_big(_error):
+        return jsonify(error="That file is too big. Try a shorter recording."), 413
 
     @app.get("/health")
     def health():

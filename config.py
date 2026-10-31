@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
+# reads the .env file into environment variables (does nothing if there isn't one)
 load_dotenv()
 
 
@@ -13,6 +14,8 @@ def _require(name):
 
 
 def _fix_db_url(url):
+    # Neon gives "postgresql://...", but we want SQLAlchemy to use the psycopg 3 driver,
+    # so the URL has to say so: "postgresql+psycopg://..."
     if url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql://", 1)
     if url.startswith("postgresql://"):
@@ -43,4 +46,4 @@ class Config:
 
     # --- uploads (photos / audio) ---
     UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
+    MAX_CONTENT_LENGTH = 32 * 1024 * 1024  # 32 MB, the same cap Meta has for audio

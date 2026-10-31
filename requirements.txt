@@ -3,4 +3,5 @@ Flask-SQLAlchemy
 psycopg[binary]
 python-dotenv
 openai
+requests
 gunicorn
