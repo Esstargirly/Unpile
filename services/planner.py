@@ -60,6 +60,13 @@ PLAN_SCHEMA = {
                                 "point in the order."
                             ),
                         },
+                        "estimate_minutes": {
+                            "type": "integer",
+                            "description": (
+                                "A friendly guess of how many minutes the whole task takes, "
+                                "from 1 to 60. Round to numbers like 2, 5, 10, 15, 30."
+                            ),
+                        },
                         "due_date": {
                             "type": "string",
                             "description": (
@@ -80,6 +87,7 @@ PLAN_SCHEMA = {
                         "next_action",
                         "urgency_score",
                         "urgency_reason",
+                        "estimate_minutes",
                         "due_date",
                         "depends_on",
                     ],
@@ -107,6 +115,7 @@ Rules:
   If two things are equally urgent, put the quicker one first.
 - A task that needs another task finished first must come after it, and say so in depends_on.
 - next_action is one concrete first step that takes a few minutes, not the whole task.
+- estimate_minutes is an honest guess for the whole task, not just the first step.
 - Turn deadlines like "Friday" or "tomorrow" into real dates using today's date.
 - Keep the wording plain, warm and short. No exclamation marks and no pressure words
   like "must", "hurry" or "immediately".
@@ -162,6 +171,15 @@ def _clamp_text(value, limit):
     return str(value or "").strip()[:limit]
 
 
+def _parse_minutes(value):
+    """Spark's guess at how long it takes: a whole number from 1 to 120, or None."""
+    try:
+        minutes = int(value)
+    except (TypeError, ValueError):
+        return None
+    return minutes if 1 <= minutes <= 120 else None
+
+
 def _parse_due(value):
     """'2026-11-06' -> end of that day (UTC). Anything else -> None."""
     try:
@@ -194,6 +212,7 @@ def _clean_tasks(raw_tasks):
                 "next_action": _clamp_text(item.get("next_action"), 160),
                 "urgency_score": max(0, min(10, score)),
                 "urgency_reason": _clamp_text(item.get("urgency_reason"), 160),
+                "minutes": _parse_minutes(item.get("estimate_minutes")),
                 "due_at": _parse_due(item.get("due_date")),
                 "dep_key": item.get("depends_on"),
             }
@@ -300,6 +319,7 @@ def plan_dump(user, source, raw_text, image_ref=None):
             next_action=t["next_action"],
             urgency_score=t["urgency_score"],
             urgency_reason=t["urgency_reason"],
+            estimate_minutes=t["minutes"],
             due_at=t["due_at"],
             status="queued",
             position=start + offset,

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Profile · Unpile{% endblock %}
+
+{% block header %}
+{% set header_title = "Profile" %}
+{% set show_back = true %}
+{% include "_header.html" %}
+{% endblock %}
+
+{% block main_top %}pt-header{% endblock %}
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col w-full pb-10">
+<div class="flex items-center justify-between py-space-md mb-space-lg">
+<div class="flex items-center gap-space-sm">
+<button aria-label="Back to focus view" class="w-10 h-10 -ml-1 flex items-center justify-center rounded-full text-primary hover:bg-surface-container/60 active:scale-95 transition-all" onclick="window.location.href='/focus'" type="button">
+<span class="material-symbols-outlined text-[24px]" aria-hidden="true">west</span>
+</button>
+<h2 class="font-headline-md text-headline-md text-primary font-semibold tracking-tight">Profile</h2>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/40">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-secondary-container">Quiet Mode</span>
+</div>
+</div>
+<div class="w-full flex flex-col justify-center py-space-xl">
+<div class="relative w-full bg-surface-container-lowest rounded-xl p-space-xl shadow-xl flex flex-col items-center text-center overflow-hidden rise">
+<div class="absolute -top-12 -right-12 w-36 h-36 bg-surface-container/40 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-secondary-container/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="relative mb-space-lg">
+<div class="w-24 h-24 rounded-full overflow-hidden shadow-sm bg-surface-container p-1">
+<div class="w-full h-full rounded-full bg-secondary-container text-primary flex items-center justify-center font-headline-xl text-headline-xl" aria-hidden="true">{{ first_name[0]|upper }}</div>
+</div>
+<div class="absolute bottom-0 right-1 w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center shadow-sm text-primary">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">spa</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-primary tracking-tight font-semibold mb-1 break-words max-w-full">{{ user.name }}</h3>
+<p class="font-body-md text-body-md text-tertiary/80 tracking-wide font-normal mb-space-xl break-all max-w-full">{{ user.email }}</p>
+<div class="w-12 h-0.5 rounded-full bg-surface-container mb-space-xl"></div>
+<div class="w-full flex flex-col gap-space-sm">
+<button class="w-full py-4 px-6 rounded-full bg-primary text-on-primary font-label-lg text-label-lg tracking-wide hover:bg-primary-container active:scale-[0.98] disabled:opacity-75 transition-all duration-200 flex items-center justify-center gap-space-xs shadow-sm" id="logoutBtn" type="button">
+<span id="logout-label">Log out</span>
+<span class="material-symbols-outlined text-[18px]" aria-hidden="true">logout</span>
+</button>
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 tracking-wider uppercase mt-space-xs">Take a deep breath</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center text-center mt-auto pt-space-lg text-on-surface-variant/40">
+<span class="material-symbols-outlined text-[20px] mb-1" aria-hidden="true">eco</span>
+<span class="font-label-sm text-label-sm tracking-widest uppercase">One thing at a time</span>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const logoutBtn = document.getElementById("logoutBtn");
+  logoutBtn.addEventListener("click", async () => {
+    if (logoutBtn.disabled) return;
+    logoutBtn.disabled = true;
+    document.getElementById("logout-label").textContent = "Resting...";
+    try { await Unpile.api("/api/logout", { method: "POST" }); } catch (error) {}
+    Unpile.go("/login");
+  });
+</script>
+{% endblock %}

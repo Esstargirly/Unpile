@@ -12,7 +12,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api")
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 MIN_PASSWORD_LENGTH = 8
-MAX_PASSWORD_LENGTH = 128
+MAX_PASSWORD_LENGTH = 128  # stops someone sending a giant string to be hashed
 
 
 def login_required(view):

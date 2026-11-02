@@ -1,0 +1,24 @@
+{# The top bar from the Stitch designs. Set these before including it:
+   header_title  (the centre label)
+   show_back     (true: the arrow goes back one page)
+   back_href     (optional: the arrow goes to this page instead) #}
+<header id="app-header" class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+<div class="h-16 px-margin flex items-center justify-between max-w-[480px] mx-auto w-full">
+<div class="flex items-center gap-space-xs">
+<button id="header-back" aria-label="Navigate back" {% if back_href %}onclick="window.location.href='{{ back_href }}'"{% elif show_back %}onclick="history.back()"{% else %}aria-hidden="true" tabindex="-1"{% endif %} class="w-11 h-11 -ml-space-xs flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container/40 transition-colors {% if not (show_back or back_href) %}invisible{% endif %}" type="button"><span class="material-symbols-outlined text-[22px]" aria-hidden="true">arrow_back</span></button>
+<!-- Unpile logo mark -->
+<div class="relative w-8 h-8 flex items-center justify-center" role="img" aria-label="Unpile logo">
+<div class="absolute inset-0 bg-secondary-container/60 rounded-lg -rotate-6 scale-95"></div>
+<div class="relative w-7 h-7 bg-primary-container rounded-lg flex flex-col justify-center px-1.5 space-y-[3px]">
+<span class="block h-[3px] w-4 bg-surface-container-lowest rounded-full"></span>
+<span class="block h-[3px] w-2.5 bg-surface-container-lowest rounded-full"></span>
+</div>
+</div>
+<span class="font-label-lg text-label-lg font-semibold tracking-tight text-primary ml-space-xs">Unpile</span>
+</div>
+<h1 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant/80 truncate max-w-[130px] text-center">{{ header_title }}</h1>
+<div class="flex items-center justify-end w-11 h-11">
+<a href="/profile" aria-label="Your profile" class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md flex items-center justify-center ring-2 ring-surface-container">{{ first_name[0]|upper }}</a>
+</div>
+</div>
+</header>

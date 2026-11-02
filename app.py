@@ -4,7 +4,7 @@ from flask import Flask, jsonify
 from sqlalchemy import text
 
 from config import Config
-from extensions import db
+from extensions import db, sock
 
 
 def create_app():
@@ -15,18 +15,25 @@ def create_app():
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
     db.init_app(app)
+    sock.init_app(app)
 
     # importing the models is what tells SQLAlchemy which tables exist
-    import models  # noqa: F401
+    import models  
 
     with app.app_context():
         db.create_all()
+        if db.engine.dialect.name == "postgresql":
+            db.session.execute(text("ALTER TABLE tasks ADD COLUMN IF NOT EXISTS estimate_minutes SMALLINT"))
+            db.session.commit()
 
     from routes.auth import auth_bp
     from routes.dump import dump_bp
     from routes.focus import focus_bp
+    import routes.live  
+    from routes.pages import pages_bp
     from routes.park import park_bp
 
+    app.register_blueprint(pages_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dump_bp)
     app.register_blueprint(focus_bp)
@@ -38,7 +45,6 @@ def create_app():
 
     @app.get("/health")
     def health():
-        # quick check that the app can reach Neon
         try:
             db.session.execute(text("SELECT 1"))
             return jsonify(status="ok")
@@ -49,7 +55,6 @@ def create_app():
     return app
 
 
-# module-level app so "gunicorn app:app" works when we deploy
 app = create_app()
 
 if __name__ == "__main__":

@@ -1,0 +1,67 @@
+{# The "Park a thought" bottom sheet from the Stitch designs.
+   Include it on any page that needs it, then open it with UnpilePark.open().
+   The page also needs: recorder.js, live.js and park.js #}
+<div id="park-root" class="hidden">
+<!-- SOFT DARKENED WARM SCRIM OVERLAY -->
+<div class="fixed inset-0 z-40 bg-on-background/25 backdrop-blur-[2px] transition-opacity duration-300" id="park-scrim"></div>
+<!-- BOTTOM SHEET CONTAINER -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-0 pb-safe" role="dialog" aria-modal="true" aria-labelledby="park-title">
+<div class="w-full max-w-[480px] bg-surface-container-lowest rounded-t-[28px] shadow-xl p-6 pt-3 flex flex-col gap-5 transition-transform duration-300 transform translate-y-0" id="park-card">
+<!-- Tactile grab handle -->
+<div class="w-full flex justify-center py-2">
+<div class="w-10 h-1.5 rounded-full bg-surface-variant/80"></div>
+</div>
+<!-- Header typography -->
+<div class="flex flex-col gap-1 text-left">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-lg text-headline-lg text-primary-container font-semibold tracking-tight" id="park-title">Park a thought</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-tertiary-container font-label-sm text-label-sm">Safe space</span>
+</div>
+<p class="font-body-md text-body-md text-tertiary">Save it for later without losing your flow.</p>
+</div>
+<!-- Text input area with voice trigger -->
+<div class="flex flex-col gap-2">
+<div class="relative w-full rounded-2xl bg-surface-container-low p-3.5 focus-within:bg-surface-container-lowest focus-within:shadow-[0_0_0_3px_rgba(89,102,71,0.2)] transition-all">
+<label class="sr-only" for="park-input">The thought to park</label>
+<textarea class="w-full bg-transparent resize-none font-body-md text-[16px] text-on-surface placeholder:text-outline/70 focus:outline-none pr-10" id="park-input" placeholder="What just crossed your mind?" rows="3" maxlength="300"></textarea>
+<!-- Quiet microphone action button -->
+<button aria-label="Say the thought instead" class="absolute bottom-3.5 right-3.5 w-9 h-9 rounded-full bg-surface-container/60 hover:bg-secondary-container active:scale-95 flex items-center justify-center text-primary-container transition-all disabled:opacity-60" id="park-mic" type="button">
+<span class="material-symbols-outlined text-[20px]" aria-hidden="true">mic</span>
+</button>
+</div>
+<!-- Supportive Micro-tag selector -->
+<div class="flex items-center gap-2 pt-1 overflow-x-auto no-scrollbar">
+<span class="font-label-sm text-label-sm text-tertiary shrink-0">Tend to later:</span>
+<button class="park-pill shrink-0 px-3 py-1 rounded-full bg-surface-container-low text-tertiary font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">
+            After focus
+          </button>
+<button class="park-pill shrink-0 px-3 py-1 rounded-full bg-surface-container-low text-tertiary font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">
+            Tomorrow morning
+          </button>
+<button class="park-pill shrink-0 px-3 py-1 rounded-full bg-surface-container-low text-tertiary font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">
+            Weekend review
+          </button>
+</div>
+</div>
+<!-- Delightful reassurance card -->
+<div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-high/40">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[18px]" aria-hidden="true">temp_preferences_custom</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Your active timer keeps breathing softly. Nothing here disturbs your current step.</p>
+</div>
+<!-- Messages show here, softly -->
+<p data-error role="alert" hidden class="bg-surface-container text-tertiary font-label-md text-label-md rounded-lg px-4 py-3 text-left"></p>
+<!-- Primary & Dismiss Actions -->
+<div class="flex flex-col gap-2.5 pt-1">
+<button class="w-full h-13 py-3.5 px-6 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-[0.99] disabled:opacity-90 transition-all" id="park-submit" type="button">
+<span class="material-symbols-outlined text-[20px]" aria-hidden="true">inventory_2</span>
+<span>Park it</span>
+</button>
+<button class="w-full py-2.5 text-center font-label-md text-label-md text-tertiary hover:text-on-background active:opacity-75 transition-colors" id="park-cancel" type="button">
+          Cancel
+        </button>
+</div>
+</div>
+</div>
+</div>

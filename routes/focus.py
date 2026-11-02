@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from flask import Blueprint, g, jsonify, request
 from sqlalchemy import func
@@ -17,18 +17,30 @@ def _count(user_id, status):
     )
 
 
-def _state(user_id, **extra):
-    """What the focus screen needs: the ONE task, and yes/no flags. Never counts."""
+def focus_state(user_id, **extra):
+    """What the focus screen needs: the ONE task, and yes/no flags. The two numbers
+    (cleared, parked) are only for the all-clear screen."""
     active = db.session.scalar(db.select(Task).where(Task.user_id == user_id, Task.status == "active"))
     waiting = _count(user_id, "queued")
     finished_something = _count(user_id, "done") > 0
+    since = datetime.now(timezone.utc) - timedelta(hours=24)
+    cleared = db.session.scalar(
+        db.select(func.count(Task.id)).where(
+            Task.user_id == user_id, Task.status == "done", Task.completed_at >= since
+        )
+    )
     return {
         "active": active.to_dict() if active else None,
         "has_more": waiting > 0,
         # nothing left AND they got through some tasks: show the "pile is gone" screen
         "all_clear": active is None and waiting == 0 and finished_something,
+        "cleared": cleared,
+        "parked": _count(user_id, "parked"),
         **extra,
     }
+
+
+_state = focus_state  # the old name, so nothing else breaks
 
 
 def _lock_active(user_id):
@@ -112,3 +124,22 @@ def not_now():
     # if it's the only startable thing, it comes straight back, and the screen can say so
     only_one = next_task is not None and next_task.id == current.id
     return jsonify(_state(g.user.id, only_one=only_one))
+
+
+@focus_bp.post("/focus/step")
+@login_required
+def edit_step():
+    """Lets the person rewrite the first step of the task they're on ("Add detail")."""
+    current = _lock_active(g.user.id)
+    if current is None or _is_stale(current):
+        return jsonify(_state(g.user.id))
+
+    data = request.get_json(silent=True) or {}
+    text = data.get("next_action")
+    text = " ".join(text.split())[:160] if isinstance(text, str) else ""
+    if not text:
+        return jsonify(error="Write a first step, or leave it as it is."), 400
+
+    current.next_action = text
+    db.session.commit()
+    return jsonify(_state(g.user.id))

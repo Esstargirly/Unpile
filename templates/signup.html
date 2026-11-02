@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Create account · Unpile{% endblock %}
+
+{% block content %}
+<div class="flex flex-col w-full px-space-xs py-space-md items-center justify-center relative">
+<!-- Ambient Serene Glow -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-64 bg-secondary-container/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- Header & Brand Symbol -->
+<div class="flex flex-col items-center text-center space-y-space-sm mb-space-lg w-full max-w-sm rise">
+<!-- Brand Mark Container -->
+<div class="relative w-16 h-16 flex items-center justify-center mb-space-xs float" role="img" aria-label="Unpile logo">
+<div class="absolute inset-0 bg-secondary-container/60 rounded-2xl rotate-6 scale-95 transition-transform duration-500 hover:rotate-12"></div>
+<div class="relative w-14 h-14 bg-primary-container rounded-2xl flex flex-col justify-center px-3.5 space-y-1.5 shadow-sm">
+<span class="w-7 h-1.5 bg-on-primary rounded-full"></span>
+<span class="w-4 h-1.5 bg-on-primary/80 rounded-full"></span>
+</div>
+</div>
+<!-- Title & Subtitle -->
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Create your space</h1>
+<p class="font-body-md text-body-md text-tertiary">One thing at a time.</p>
+</div>
+<!-- Main Card -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col space-y-space-md relative rise" style="--d:120ms">
+<form class="flex flex-col space-y-space-md" id="signup-form" data-auth-form="signup" novalidate>
+<!-- Full Name Field -->
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="name">
+<span>What should we call you?</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant" aria-hidden="true">person</span>
+</label>
+<div class="relative">
+<input autocomplete="name" class="w-full bg-surface-container-low/60 text-on-surface font-body-md text-[16px] px-space-md py-3.5 rounded-DEFAULT placeholder:text-outline-variant outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:shadow-[0_0_0_3px_rgba(89,102,71,0.15)]" id="name" name="name" placeholder="Maya Lin" required="" type="text"/>
+</div>
+</div>
+<!-- Email Field -->
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="email">
+<span>Email address</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant" aria-hidden="true">alternate_email</span>
+</label>
+<div class="relative">
+<input autocomplete="email" class="w-full bg-surface-container-low/60 text-on-surface font-body-md text-[16px] px-space-md py-3.5 rounded-DEFAULT placeholder:text-outline-variant outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:shadow-[0_0_0_3px_rgba(89,102,71,0.15)]" id="email" name="email" placeholder="maya@studio.co" required="" type="email" inputmode="email" autocapitalize="none" spellcheck="false"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="password">
+<span>Password</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant" aria-hidden="true">lock</span>
+</label>
+<div class="relative flex items-center">
+<input autocomplete="new-password" class="w-full bg-surface-container-low/60 text-on-surface font-body-md text-[16px] pl-space-md pr-11 py-3.5 rounded-DEFAULT placeholder:text-outline-variant outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:shadow-[0_0_0_3px_rgba(89,102,71,0.15)]" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute right-3 p-1 text-outline-variant hover:text-on-surface-variant transition-colors flex items-center justify-center rounded-full" id="toggle-password" type="button">
+<span class="material-symbols-outlined text-[18px]" id="password-icon" aria-hidden="true">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Micro-Ritual Reassurance / Delight -->
+<div class="pt-space-xs flex items-center space-x-2 text-on-surface-variant/80">
+<span class="material-symbols-outlined text-[16px] text-secondary" aria-hidden="true">eco</span>
+<span class="font-label-sm text-label-sm">No badges, no urgency cues, no clutter.</span>
+</div>
+<!-- Messages show here, softly. Not red: nothing in Unpile should shout -->
+<p data-error role="alert" hidden class="bg-surface-container text-tertiary font-label-md text-label-md rounded-lg px-4 py-3"></p>
+<!-- Primary Action Button -->
+<div class="pt-space-xs">
+<button class="w-full bg-primary-container text-on-primary font-label-lg text-label-lg py-4 px-6 rounded-full flex items-center justify-center space-x-2 transition-all duration-200 active:scale-[0.98] shadow-sm hover:opacity-95 disabled:opacity-70 disabled:cursor-wait" id="submit-btn" data-submit type="submit">
+<span>Create account</span>
+<span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Calm Separation Divider -->
+<div class="relative flex py-1 items-center">
+<div class="flex-grow bg-surface-container-high h-[1px]"></div>
+<span class="flex-shrink mx-3 text-outline-variant font-label-sm text-label-sm">or</span>
+<div class="flex-grow bg-surface-container-high h-[1px]"></div>
+</div>
+<!-- Soft Secondary Ritual Link -->
+<div class="flex flex-col items-center pt-space-xs text-center">
+<a class="font-body-md text-body-md text-tertiary transition-colors duration-150 hover:text-on-background py-1" href="{{ url_for('pages.login') }}">
+        Already have an account? <span class="font-label-md text-label-md text-primary font-semibold underline decoration-secondary-container decoration-2 underline-offset-4">Log in</span>
+</a>
+</div>
+</div>
+<!-- Bottom Calming Anchor -->
+<div class="mt-space-lg flex items-center space-x-2 text-outline-variant rise" style="--d:240ms">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span class="font-label-sm text-label-sm text-tertiary/70">Unpile Mindful Productivity</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

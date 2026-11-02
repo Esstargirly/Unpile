@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Focus · Unpile{% endblock %}
+
+{% block header %}
+{% set header_title = "Focus Chamber" %}
+{% set back_href = "/" %}
+{% include "_header.html" %}
+{% endblock %}
+
+{% block main_top %}pt-header{% endblock %}
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<script type="application/json" id="focus-data">{{ state|tojson }}</script>
+
+<!-- ===== The one thing ===== -->
+<div id="focus-view" class="flex flex-col w-full py-space-sm">
+
+<!-- Minimal Ambient Sub-Bar -->
+<div class="flex items-center justify-between px-space-xs mb-space-lg text-tertiary">
+<a class="flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container/60 hover:bg-surface-container text-tertiary transition-all duration-300" id="btn-parked-shelf" href="/parked">
+<span class="material-symbols-outlined text-[19px]" aria-hidden="true">inventory_2</span>
+<span class="font-label-md text-label-md">Parked Shelf</span>
+</a>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Toggle serene ambient tone" aria-pressed="false" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container/40 hover:bg-surface-container text-tertiary transition-colors" id="btn-soundscape" type="button">
+<span class="material-symbols-outlined text-[20px]" aria-hidden="true">air</span>
+</button>
+<a aria-label="Account details" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container/40 hover:bg-surface-container text-tertiary transition-colors" href="/profile">
+<span class="material-symbols-outlined text-[20px]" aria-hidden="true">person</span>
+</a>
+</div>
+</div>
+
+<!-- After Done: the finished task, and a kind word -->
+<div id="intro" class="hidden transition-all duration-700">
+<div class="flex items-center justify-center gap-space-xs mx-auto mb-space-md px-space-md py-1.5 rounded-full bg-secondary-container/60 text-on-secondary-container transition-all duration-1000 ease-out shadow-sm w-fit max-w-full" id="echo-badge">
+<span class="material-symbols-outlined text-[17px] text-primary" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">check_circle</span>
+<span class="font-label-md text-label-md font-medium tracking-tight truncate" id="echo-title"></span>
+</div>
+<div class="flex flex-col items-center text-center px-margin mb-space-lg">
+<div class="w-1.5 h-1.5 rounded-full bg-primary/30 mb-space-sm animate-pulse"></div>
+<h2 class="font-headline-md text-headline-md text-primary font-semibold tracking-tight">Nice. Here’s the next one.</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant/80 mt-1">One breath, then steady forward.</p>
+</div>
+</div>
+
+<!-- Ambient Breathing Center Chamber -->
+<div class="flex flex-col items-center justify-center py-space-lg my-auto relative">
+<!-- Subtle Ambient Glow -->
+<div class="absolute w-72 h-72 rounded-full bg-secondary-container/25 blur-3xl -z-10 pointer-events-none"></div>
+<!-- The Crown Jewel Focus Card -->
+<article class="w-full bg-surface-container-lowest rounded-xl p-space-lg shadow-md transition-all duration-500 relative flex flex-col justify-between min-h-[260px] rise" id="focus-card">
+<!-- Quiet Anchor Badge -->
+<div class="flex items-center justify-between mb-space-md">
+<span class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-low text-tertiary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          Right now
+        </span>
+<span class="material-symbols-outlined text-outline-variant text-[20px]" aria-hidden="true">spa</span>
+</div>
+<!-- Core Task Typography -->
+<div class="my-auto py-space-sm">
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight leading-relaxed transition-opacity duration-300" id="task-title"></h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm" id="task-step"></p>
+<form id="step-editor" class="hidden mt-space-sm flex-col gap-space-sm" novalidate>
+<label class="sr-only" for="step-input">The first step</label>
+<input class="w-full bg-surface-container-low text-on-surface font-body-md text-[16px] px-space-md py-3 rounded-full placeholder:text-outline-variant outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:shadow-[0_0_0_3px_rgba(89,102,71,0.15)]" id="step-input" maxlength="160" placeholder="What's the first small step?" type="text"/>
+<p data-error role="alert" hidden class="bg-surface-container text-tertiary font-label-md text-label-md rounded-lg px-4 py-3"></p>
+<div class="flex items-center justify-end gap-space-sm">
+<button class="font-label-md text-label-md text-tertiary px-space-md py-space-xs rounded-full hover:bg-surface-container-low transition-colors" id="step-cancel" type="button">Cancel</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-space-lg py-space-xs rounded-full hover:bg-primary-container active:scale-[0.98] transition-all" type="submit">Save</button>
+</div>
+</form>
+<p class="font-body-sm text-body-sm text-tertiary/80 mt-space-sm flex items-center gap-space-xs" id="task-context"></p>
+</div>
+<!-- Micro tactile bottom hint -->
+<div class="pt-space-md flex items-center justify-between text-on-surface-variant/60 font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" aria-hidden="true">schedule</span>
+<span id="cadence">Morning cadence</span>
+</span>
+<button class="hover:text-primary transition-colors flex items-center gap-1" id="btn-quick-note" type="button">
+<span class="material-symbols-outlined text-[16px]" aria-hidden="true">edit_note</span>
+<span>Add detail</span>
+</button>
+</div>
+</article>
+<!-- Core Actions Deck -->
+<div class="w-full mt-space-xl flex flex-col items-center gap-space-md">
+<!-- Primary Pill: Done -->
+<button class="w-full h-14 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-space-sm shadow-sm active:scale-[0.98] disabled:opacity-80 transition-all duration-200" id="btn-done" type="button">
+<span class="material-symbols-outlined text-[22px]" aria-hidden="true">check</span>
+<span>Done</span>
+</button>
+<!-- Soft Secondary Alternatives -->
+<div class="w-full flex items-center justify-center gap-space-lg pt-space-xs">
+<button class="px-space-md py-space-xs text-tertiary hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5 active:opacity-70 disabled:opacity-60" id="btn-not-now" type="button">
+<span class="material-symbols-outlined text-[17px]" aria-hidden="true">history</span>
+<span>Not now</span>
+</button>
+<div class="w-1 h-1 rounded-full bg-outline-variant/60"></div>
+<button class="px-space-md py-space-xs text-tertiary hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5 active:opacity-70" id="btn-park-thought" type="button">
+<span class="material-symbols-outlined text-[17px]" aria-hidden="true">inventory_2</span>
+<span>Park a thought</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Reassuring Footer: only shows when something really is waiting -->
+<div class="hidden w-full pt-space-xl pb-space-md flex-col items-center justify-center text-center space-y-space-xs" id="rest-note">
+<div class="flex items-center gap-2 text-tertiary/60 font-body-sm text-body-sm select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span class="tracking-wide">The rest is waiting.</span>
+</div>
+<div class="flex items-center gap-1.5 pt-1 opacity-60" aria-hidden="true">
+<div class="w-6 h-1 rounded-full bg-surface-variant"></div>
+<div class="w-1.5 h-1 rounded-full bg-surface-variant"></div>
+<div class="w-1.5 h-1 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+</div>
+
+<!-- ===== All clear: the pile is gone ===== -->
+<div id="clear-view" class="hidden flex-col w-full pb-space-xl">
+<div class="flex flex-col items-center justify-center text-center px-margin pt-10 pb-8">
+<div class="relative flex items-center justify-center w-52 h-52 mb-6">
+<div class="absolute inset-0 rounded-full bg-secondary-container/40 blur-2xl transform scale-90 transition-transform duration-1000"></div>
+<div class="relative w-44 h-44 rounded-full bg-surface-container-low flex items-center justify-center shadow-sm">
+<svg aria-hidden="true" class="w-32 h-32" fill="none" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="80" cy="116" fill="#733b26" fill-opacity="0.08" rx="46" ry="10"></ellipse>
+<path d="M42 108C50 114 110 114 118 108C121 105 116 102 106 100C92 97.5 68 97.5 54 100C44 102 39 105 42 108Z" fill="#733b26" fill-opacity="0.14"></path>
+<path d="M48 103C58 92 76 68 82 40C88 64 108 86 114 99C98 107 62 107 48 103Z" fill="#566342" fill-opacity="0.22"></path>
+<path d="M80 40C79.5 62 76 86 64 105" stroke="#566342" stroke-linecap="round" stroke-width="2"></path>
+<path d="M78 68C72 65 64 66 60 70" stroke="#566342" stroke-linecap="round" stroke-width="1.5"></path>
+<path d="M79 82C74 81 68 83 65 87" stroke="#566342" stroke-linecap="round" stroke-width="1.5"></path>
+<path d="M80 58C86 56 94 58 98 62" stroke="#566342" stroke-linecap="round" stroke-width="1.5"></path>
+<path d="M79 73C85 73 91 76 94 80" stroke="#566342" stroke-linecap="round" stroke-width="1.5"></path>
+<circle cx="82" cy="38" fill="#566342" fill-opacity="0.6" r="2.5"></circle>
+</svg>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary tracking-normal font-semibold">Rest state</span>
+</div>
+</div>
+<div class="max-w-[320px] flex flex-col items-center">
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mb-2">Nothing left. The pile is gone.</h2>
+<p class="font-body-md text-body-md text-tertiary opacity-90 leading-relaxed">Breathe easy. Your mind is clear for now.</p>
+</div>
+</div>
+<div class="mt-4 px-margin flex flex-col gap-4">
+<div class="bg-surface-container-low rounded-lg p-5 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[20px]" aria-hidden="true">spa</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-primary font-semibold truncate">Unburdened ritual</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">No upcoming notifications pending</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full shrink-0 font-medium">Silent</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-lowest p-4 rounded-DEFAULT shadow-sm flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cleared today</span>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="font-headline-md text-headline-md text-primary font-bold" id="clear-count">0</span>
+<span class="font-body-sm text-body-sm text-tertiary" id="clear-unit">moments</span>
+</div>
+</div>
+<a class="bg-surface-container-lowest p-4 rounded-DEFAULT shadow-sm flex flex-col justify-between" href="/parked">
+<span class="font-label-sm text-label-sm text-on-surface-variant">On your shelf</span>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="font-headline-md text-headline-md text-secondary font-bold" id="shelf-count">0</span>
+<span class="font-body-sm text-body-sm text-tertiary" id="shelf-unit">thoughts</span>
+</div>
+</a>
+</div>
+<div class="pt-4 flex flex-col gap-3">
+<a class="w-full bg-primary text-on-primary py-4 px-6 rounded-full font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-[0.99] transition-transform" href="/" id="add-more">
+<span class="material-symbols-outlined text-[20px]" aria-hidden="true">add</span>
+<span>Add more</span>
+</a>
+<button class="w-full bg-transparent text-tertiary py-3 px-6 rounded-full font-label-md text-label-md hover:bg-surface-container/30 transition-colors text-center" id="linger" type="button">
+        Stay in the pause
+      </button>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include "_park_sheet.html" %}
+<script src="{{ url_for('static', filename='js/recorder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/live.js') }}"></script>
+<script src="{{ url_for('static', filename='js/park.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ambient.js') }}"></script>
+<script src="{{ url_for('static', filename='js/focus.js') }}"></script>
+{% endblock %}

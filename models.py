@@ -67,6 +67,7 @@ class Task(db.Model):
 
     urgency_score = db.Column(db.SmallInteger, nullable=False, default=5, server_default="5")
     urgency_reason = db.Column(db.Text)  # the short "why this first" line
+    estimate_minutes = db.Column(db.SmallInteger)  # Spark's guess for "Takes 3 minutes"
     due_at = db.Column(db.DateTime(timezone=True))
     depends_on = db.Column(db.BigInteger, db.ForeignKey("tasks.id", ondelete="SET NULL"))  # must be done first
 
@@ -97,5 +98,6 @@ class Task(db.Model):
             "next_action": self.next_action,
             "status": self.status,
             "urgency_reason": self.urgency_reason,
+            "minutes": self.estimate_minutes,
             "due_at": self.due_at.isoformat() if self.due_at else None,
         }

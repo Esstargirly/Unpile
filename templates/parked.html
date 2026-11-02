@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Parked Shelf · Unpile{% endblock %}
+
+{% block header %}
+{% set header_title = "Parked Tasks" %}
+{% set show_back = true %}
+{% include "_header.html" %}
+{% endblock %}
+
+{% block main_top %}pt-header{% endblock %}
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<script type="application/json" id="parked-data">{{ items|tojson }}</script>
+<div class="flex flex-col w-full pb-10">
+<div class="flex items-center justify-between py-space-md mb-space-sm rise">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-md text-headline-md text-primary">Parked Shelf</span>
+</div>
+<div class="flex items-center gap-space-xs px-3 py-1 bg-surface-container rounded-full">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">spa</span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Unburdened</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg leading-relaxed rise" style="--d:80ms">
+    Ideas gently kept aside so your present moment remains entirely clear.
+  </p>
+<div class="space-y-space-md" id="parked-shelf-list"></div>
+<!-- Ambient Visual Resting Sanctuary -->
+<div class="mt-space-xl p-space-lg rounded-lg bg-surface-container-low flex flex-col items-center text-center rise" style="--d:160ms">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-primary mb-space-sm">
+<span class="material-symbols-outlined text-[24px]" aria-hidden="true">air</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px]">
+      Thoughts rest here until you choose to welcome them.
+    </p>
+<div class="w-8 h-0.5 bg-outline-variant rounded-full mt-space-md opacity-40"></div>
+</div>
+<!-- Deliberate subtle action -->
+<div class="mt-space-lg flex justify-center rise" style="--d:240ms">
+<button class="px-space-lg py-3 rounded-full bg-secondary-container text-on-secondary-container font-label-lg text-label-lg flex items-center gap-space-xs shadow-sm hover:opacity-95 active:scale-95 transition-all" id="park-another" type="button">
+<span class="material-symbols-outlined text-[18px]" aria-hidden="true">add</span>
+<span>Park another thought</span>
+</button>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include "_park_sheet.html" %}
+<script src="{{ url_for('static', filename='js/recorder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/live.js') }}"></script>
+<script src="{{ url_for('static', filename='js/park.js') }}"></script>
+<script src="{{ url_for('static', filename='js/parked.js') }}"></script>
+{% endblock %}

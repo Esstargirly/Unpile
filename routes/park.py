@@ -93,6 +93,7 @@ def bring_back(task_id):
         task.next_action = item["next_action"] or None
         task.urgency_score = item["urgency_score"]
         task.urgency_reason = item["urgency_reason"] or None
+        task.estimate_minutes = item["minutes"]
         task.due_at = item["due_at"]
 
     open_tasks = db.session.scalars(
@@ -111,7 +112,8 @@ def bring_back(task_id):
 
     activate_next_task(g.user.id)  # only does anything if nothing was active
     db.session.commit()
-    return jsonify(ok=True)
+    # active_now = it became the thing to focus on straight away (nothing else was active)
+    return jsonify(ok=True, active_now=task.status == "active")
 
 
 @park_bp.delete("/parked/<int:task_id>")
@@ -124,3 +126,18 @@ def let_go(task_id):
     db.session.delete(task)
     db.session.commit()
     return jsonify(ok=True)
+
+
+@park_bp.post("/transcribe")
+@login_required
+def transcribe_only():
+    """Turns a recording into text and nothing else. Used by the Park a thought sheet,
+    so a spoken thought can land in the box and be edited before it's parked."""
+    audio = request.files.get("audio")
+    if not audio:
+        return jsonify(error="Say something first."), 400
+    try:
+        text = transcribe_wav(audio.read())
+    except TranscribeError as error:
+        return jsonify(error=str(error)), 400
+    return jsonify(text=text)

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Log in · Unpile{% endblock %}
+
+{% block content %}
+<div class="flex flex-col w-full px-margin py-space-xl items-center justify-between min-h-[580px]">
+<!-- Brand & Calming Visual Motif -->
+<div class="flex flex-col items-center text-center space-y-space-md w-full rise">
+<!-- Tactile Unpile Logo Layer with Organic Subtle Underlay -->
+<div class="relative flex items-center justify-center w-24 h-24 my-space-xs float" role="img" aria-label="Unpile logo">
+<div class="absolute inset-0 bg-secondary-container/60 rounded-xl transform -rotate-6 scale-95 transition-transform duration-700 ease-out hover:rotate-0"></div>
+<div class="relative z-10 w-20 h-20 bg-primary-container rounded-lg shadow-sm flex flex-col justify-center px-4 space-y-2">
+<div class="h-2 w-11 bg-surface-container-lowest rounded-full"></div>
+<div class="h-2 w-7 bg-surface-container-lowest rounded-full"></div>
+</div>
+</div>
+<!-- Editorial Brand Hierarchy -->
+<div class="space-y-1">
+<h1 class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight">
+        Unpile
+      </h1>
+<p class="font-body-md text-body-md text-tertiary">
+        One thing at a time.
+      </p>
+</div>
+</div>
+<!-- Pure Focus Input Chamber -->
+<form id="login-form" data-auth-form="login" class="w-full my-space-lg rise" style="--d:120ms" novalidate>
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm space-y-space-md">
+<!-- Email Field -->
+<div class="space-y-1.5 text-left">
+<label class="block font-label-md text-label-md text-on-surface-variant font-medium" for="email">
+          Email address
+        </label>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-low text-on-surface placeholder:text-outline font-body-md text-[16px] px-4 py-3.5 rounded-full transition-all duration-200 outline-none focus:bg-surface-container-lowest shadow-none focus:shadow-[0_0_0_3px_rgba(89,102,71,0.15)]" id="email" name="email" placeholder="your@email.com" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-1.5 text-left">
+<div class="flex items-center justify-between">
+<label class="block font-label-md text-label-md text-on-surface-variant font-medium" for="password">
+            Password
+          </label>
+<button class="font-label-sm text-label-sm text-tertiary hover:text-tertiary-container transition-colors" id="forgot" type="button">
+            Forgot?
+          </button>
+</div>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-low text-on-surface placeholder:text-outline font-body-md text-[16px] px-4 py-3.5 rounded-full transition-all duration-200 outline-none focus:bg-surface-container-lowest shadow-none focus:shadow-[0_0_0_3px_rgba(89,102,71,0.15)]" id="password" name="password" placeholder="••••••••" type="password" autocomplete="current-password"/>
+</div>
+</div>
+<!-- Messages show here, softly. Not red: nothing in Unpile should shout -->
+<p data-error role="alert" hidden class="bg-surface-container text-tertiary font-label-md text-label-md rounded-lg px-4 py-3 text-left"></p>
+<!-- Primary Action -->
+<div class="pt-space-xs">
+<button class="w-full bg-primary text-on-primary font-label-lg text-label-lg py-4 px-6 rounded-full shadow-sm hover:bg-primary-container active:scale-[0.99] disabled:opacity-70 disabled:cursor-wait transition-all duration-200 flex items-center justify-center group" id="login-btn" data-submit type="submit">
+<span>Log in</span>
+<span class="material-symbols-outlined ml-2 text-[18px] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" aria-hidden="true">arrow_forward</span>
+</button>
+</div>
+</div>
+</form>
+<!-- Calming Transition Link & Mindful Micro-copy -->
+<div class="flex flex-col items-center space-y-space-sm pb-space-sm text-center rise" style="--d:240ms">
+<a class="font-label-md text-label-md text-tertiary hover:text-on-surface transition-colors py-1 px-3 rounded-full hover:bg-surface-container-high/40" href="{{ url_for('pages.signup') }}">
+      New here? <span class="font-semibold text-primary underline decoration-secondary-container decoration-2 underline-offset-4">Create an account</span>
+</a>
+<p class="font-label-sm text-label-sm text-outline font-normal">
+      Breathe in. Clear space.
+    </p>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

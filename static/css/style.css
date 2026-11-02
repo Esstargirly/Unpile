@@ -1,0 +1,89 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff8f5; /* same as Stitch's "surface" */
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: max(884px, 100dvh);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* keeps content clear of the notch and home bar on phones */
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+main > :first-child { margin-top: 0 !important; }
+main > :last-child { margin-bottom: 0 !important; }
+
+/* icons stay hidden until the icon font has loaded, so nobody sees the word "arrow_forward" */
+.material-symbols-outlined { visibility: hidden; }
+.icons-ready .material-symbols-outlined { visibility: visible; }
+
+/* a soft ring for keyboard users (mouse and touch never see it) */
+:focus-visible {
+  outline: 2px solid #A3B18A;
+  outline-offset: 3px;
+}
+input:focus-visible { outline: none; }
+
+/* browsers paint autofilled fields yellow or blue. Keep them calm instead. */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 100px #fff1e9 inset;
+  -webkit-text-fill-color: #26190f;
+  caret-color: #26190f;
+}
+
+/* ---------- gentle motion ---------- */
+
+/* things ease in, one after another. Set the delay with style="--d:120ms" */
+.rise {
+  opacity: 0;
+  animation: rise 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.fade-in { animation: fade-in 0.4s ease-out; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* the logo floats, very slowly */
+.float { animation: float 7s ease-in-out infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* people who asked their device for less motion get none */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .rise { opacity: 1; }
+}
+
+/* ---------- added for the home screen ---------- */
+
+/* room for the fixed top bar (4rem) plus the phone's notch */
+.pt-header { padding-top: calc(4rem + env(safe-area-inset-top, 0px)); }
+
+/* horizontal scrolling rows without a scrollbar */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }

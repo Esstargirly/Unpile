@@ -1,12 +1,3 @@
-"""The one place the Meta Model API is set up.
-
-Every other service (transcribe, planner, vision) gets its client and model names from here,
-so if a key, URL or model ID changes, it changes in one spot.
-
-Quick test from the project root, with the venv active:
-    python -m services.meta_client
-"""
-
 from openai import OpenAI
 
 from config import Config

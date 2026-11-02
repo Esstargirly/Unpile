@@ -17,7 +17,8 @@ def create_dump():
 
     Two ways to call it:
       - a recording: multipart/form-data with an "audio" part (WAV, mono, 16-bit, 16 or 24 kHz)
-      - typed text:  JSON like {"text": "..."}
+      - text:        JSON like {"text": "..."}. Add "source": "voice" if the words were spoken
+                     (the live transcription already turned them into text)
     (photos get added later)
     """
     audio = request.files.get("audio")
@@ -28,8 +29,8 @@ def create_dump():
             # the recording is only used to get the text. We never store the audio itself.
             text = transcribe_wav(audio.read())
         else:
-            source = "text"
             data = request.get_json(silent=True) or {}
+            source = "voice" if data.get("source") == "voice" else "text"
             text = data.get("text")
             text = text.strip() if isinstance(text, str) else ""
             if not text:

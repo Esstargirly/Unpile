@@ -1,7 +1,9 @@
 Flask
 Flask-SQLAlchemy
+Flask-Sock
 psycopg[binary]
 python-dotenv
 openai
 requests
+websockets
 gunicorn
