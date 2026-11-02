@@ -29,6 +29,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True, "pool_recycle": 300}
+    if _require("DATABASE_URL").startswith(("postgres://", "postgresql")):
+        SQLALCHEMY_ENGINE_OPTIONS["connect_args"] = {"connect_timeout": 15, "prepare_threshold": None}
 
     # --- sessions / cookies ---
     SESSION_COOKIE_HTTPONLY = True
@@ -39,7 +41,7 @@ class Config:
     # --- Meta Model API ---
     META_API_KEY = _require("META_API_KEY")
     META_API_BASE_URL = _require("META_API_BASE_URL")
-
+    
     META_SPARK_MODEL = os.getenv("META_SPARK_MODEL", "")
     META_TRANSCRIBE_MODEL = os.getenv("META_TRANSCRIBE_MODEL", "")
 
